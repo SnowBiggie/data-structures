@@ -1,0 +1,142 @@
+/**
+ * this class is a template for all AVL tree implementations
+ * @author MOTAUNG KARABELO
+ * 17 April 2021
+ */
+public class AVLTree extends BinaryTree{
+    // for the experiment purpose, the below variables were created to count comparisons for insertion and searching.
+    //public int findCount = 0;
+    //public int insertCount = 0;
+    /**
+    *Calculates the height of an AVL tree starting at a given node
+    *@param node is the starting node for calculating height
+    *@return returns the height of the tree or -1 if the node is null
+    */
+    public int height ( BinaryTreeNode node )
+    {
+        if (node != null)
+            return node.height;
+        return -1;
+    }
+    /**
+    *the balance factor is the difference between the left and the right subtree
+    *@param node is the root of the AVL tree for calculating balance factor 
+    *@return returns an integer difference between the left and the right subtree 
+    */
+    public int balanceFactor ( BinaryTreeNode node )
+    {
+        return height (node.right) - height (node.left);
+    }
+    /**
+    *fixes the height of an AVL tree after re-balancing
+    *@param node is the root node from which height is being fixed
+    */
+    public void fixHeight ( BinaryTreeNode node )
+    {
+        node.height = Math.max (height (node.left), height (node.right)) + 1;
+    }
+    
+    /**
+    *rotates an AVL tree to the right at a given node
+    *@param p is the node for which the tree is being rotated
+    *@return 
+    */
+    public BinaryTreeNode rotateRight ( BinaryTreeNode p )
+    {
+        BinaryTreeNode q = p.left;
+        p.left = q.right;
+        q.right = p;
+        fixHeight (p);
+        fixHeight (q);
+        return q;
+    }
+    
+    /**
+    *rotates an AVL tree to the left at a given node
+    *@param p is the node for which the tree is being rotated
+    *@return 
+    */
+
+    public BinaryTreeNode rotateLeft ( BinaryTreeNode q )
+    {
+        BinaryTreeNode p = q.right;
+        q.right = p.left;
+        p.left = q;
+        fixHeight (q);
+        fixHeight (p);
+        return p;
+    }
+    
+    /**
+    *balances the tree to obtain the balance factor required by an AVL tree
+    *@param p is the node where the tree is being balaced
+    *@returns returns the node after the tree is balanced
+    */
+    public BinaryTreeNode balance ( BinaryTreeNode p )
+    {
+        fixHeight (p);
+        if (balanceFactor (p) == 2)
+        {
+            if (balanceFactor (p.right) < 0)
+                p.right = rotateRight (p.right);
+            return rotateLeft (p);
+        }
+        if (balanceFactor (p) == -2)
+        {
+            if (balanceFactor (p.left) > 0)
+                p.left = rotateLeft (p.left);
+            return rotateRight (p);
+        }
+        return p;
+    }
+    
+    /**
+    *inserts the StudentInformation data into the tree
+    *@param d is the data being inserted in the tree
+    */
+    public void insert ( StudentInformation d )
+    {
+        root = insert (d, root);
+    }
+    private BinaryTreeNode insert (StudentInformation d, BinaryTreeNode node )
+    {
+        if (node == null)
+            return new BinaryTreeNode (d, null, null);
+        if (d.compareTo (node.data) <= 0)
+            node.left = insert (d, node.left);
+        else
+            node.right = insert (d, node.right);
+        return balance (node);
+    }
+
+
+    /**
+    *finds a student in the tree
+    *@param d is the student number being searched in the tree
+    *@return returns the Student information or null if the student is not found
+    */
+    public StudentInformation printStudent ( String d )
+    {
+        if (root == null)
+            return null;
+        else
+            return find (d, root);
+    }
+    private StudentInformation find ( String d, BinaryTreeNode node )
+    {	
+        //findCount++;
+        if (d.compareTo (node.data.getKey()) == 0)
+            return node.data;
+        else if (d.compareTo (node.data.getKey()) < 0)
+            return (node.left == null) ? null : find (d, node.left);
+        else
+            return (node.right == null) ? null : find (d, node.right);
+    }
+    
+    /**
+    *prints all the students in the tree
+    */
+    public void printAllStudents(){
+        super.printAllStudents();
+    }
+}

@@ -1,0 +1,120 @@
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+/**
+ * this claas creates a binary search tree to store and retrieve student information data.
+ *
+ * @author MOTAUNG KARABELO.
+ */
+public class AccessBSTApp {
+
+    private  static binarySearchTreeNode root = null;
+
+    public static void main(String[] args){
+        create();
+        if (args.length == 1){
+            String key = args[0];
+           StudentInformation e = printStudent(key);
+            if (e != null) {
+                System.out.println(printStudent(key).getStudentName());
+            }else{
+                System.out.println("Access denied!");
+            }
+        }else if(args.length == 0){
+                printAllStudents();
+        }
+    }
+
+    /**
+     * The method creates a Binary Tree based on the data from oklist.txt.
+     */
+    public static void create(){
+        Scanner input = null;
+
+        try {
+            input = new Scanner(new FileInputStream("C:\\Users\\MOTAUNG KARABELO\\Desktop\\Assignment 1\\src\\oklist.txt"));
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+            System.exit(0);
+        }
+
+        String line = null;
+        int i = 0;
+        while (input.hasNextLine()) {
+            line = input.nextLine();
+            insert(new StudentInformation(line.substring(0,9), line.substring(10,line.length())));
+        }
+    }
+
+    /**
+     * The method insert the data into a binary tree data structure.
+     * @param data is the information being put into the Tree.
+     */
+    public static void insert (StudentInformation data) {
+        if (root == null)
+            root = new binarySearchTreeNode (data, null, null);
+        else
+            insert (data, root);
+    }
+
+    private static void insert ( StudentInformation data, binarySearchTreeNode node ) {
+        if (data.compareTo (node.data) <= 0)
+        {
+            if (node.left == null)
+                node.left = new binarySearchTreeNode (data, null, null);
+            else
+                insert (data, node.left);
+        }
+        else
+        {
+            if (node.right == null)
+                node.right = new binarySearchTreeNode (data, null, null);
+            else
+                insert (data, node.right);
+        }
+    }
+
+    /**
+     * This method is used to extract a certain student information based on a student number inside the tree.
+     * @param key is Student number being extracted from the tree
+     * @return returns the student name if the key matches ot "Access denied!" if not.
+     */
+    public static StudentInformation printStudent (String key)
+    {
+        if (root == null)
+            return null;
+        else
+            return find (key, root);
+    }
+    private static StudentInformation find (String key, binarySearchTreeNode node )
+    {
+        int cmp = key.compareTo (node.data.getKey());
+        if (cmp == 0)
+            return node.data;
+        else if (cmp < 0)
+            return (node.left == null) ? null : find (key, node.left);
+        else
+            return (node.right == null) ? null : find (key, node.right);
+    }
+
+    private static void visit (binarySearchTreeNode node )
+    {
+        System.out.println (node.data);
+    }
+
+    /**
+     * Prints all the data in the Tree inOreder().
+     */
+    public static void printAllStudents () {
+        inOrder (root);
+    }
+    private static void inOrder ( binarySearchTreeNode node ) {
+        if (node != null) {
+            inOrder (node.getLeft ());
+            visit (node);
+            inOrder (node.getRight ());
+        }
+    }
+}

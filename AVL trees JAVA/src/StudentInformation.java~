@@ -1,0 +1,38 @@
+import java.util.Scanner;
+import java.io.*;
+
+
+public class StudentInformation {
+   
+    private String key;
+    private String studentName;
+
+    public StudentInformation(String key, String studentName){
+	this.key = key;
+	this.studentName = studentName;
+    }
+   
+    public String getKey(){return this.key;}
+
+    public String getStudentName(){return this.studentName;}
+
+   // public String[] getstudentInfo(){return this.studentInfo;}
+
+    public String toString(){
+      return  getKey() + ", " + getStudentName() + ".";
+
+    }
+
+   public int compareTo(StudentInformation info){
+        return this.key.compareTo(info.getKey());
+
+    }
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public void setStudentName(String studentName) {
+		this.studentName = studentName;
+	}
+}
